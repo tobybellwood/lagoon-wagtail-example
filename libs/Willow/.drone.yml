@@ -1,0 +1,4 @@
+build:
+  image: willow-ci
+  commands:
+    - python runtests.py --opencv
