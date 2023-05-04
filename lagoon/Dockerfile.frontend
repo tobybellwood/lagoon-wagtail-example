@@ -3,8 +3,6 @@ FROM ${WEB_IMAGE} as web
 FROM uselagoon/node-18
 LABEL maintainer="hello@wagtail.org"
 
-# RUN apt-get update && apt-get install -y
-# RUN git clone https://github.com/wagtail/wagtail.git
 WORKDIR /code/wagtail
 COPY --from=web /code/wagtail /code/wagtail
 RUN npm --prefix /code/wagtail install --loglevel info

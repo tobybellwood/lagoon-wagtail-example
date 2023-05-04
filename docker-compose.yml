@@ -7,7 +7,7 @@ volumes:
 services:
   web:
     container_name: "web"
-    image: &web-image web-image # this image will be reused as `CLI_IMAGE` in subsequent Docker buil
+    image: &web-image web-image # this image will be reused as `CLI_IMAGE` in subsequent Docker builds
     build:
       context: .
       dockerfile: lagoon/Dockerfile
@@ -62,5 +62,3 @@ services:
     command: sh -c "npm run build && npm run start"
     restart: always
     tty: true
-    # ports:
-    #   - "3000:3000"
