@@ -1,2 +1,0 @@
-include LICENSE README.rst CHANGELOG.txt
-recursive-include modelcluster *.py

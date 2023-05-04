@@ -1,7 +1,0 @@
-*.pyc
-*.swp
-/build
-/Willow.egg-info
-/dist
-/venv
-.vscode

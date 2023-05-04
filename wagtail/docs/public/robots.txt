@@ -1,5 +1,0 @@
-User-agent: *
-
-Disallow: /*/pdf/
-
-Sitemap: https://docs.wagtail.org/sitemap.xml

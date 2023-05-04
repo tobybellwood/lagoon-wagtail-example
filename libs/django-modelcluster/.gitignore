@@ -1,7 +1,0 @@
-*.pyc
-*.swp
-dist/
-build/
-.tox/
-MANIFEST
-/django_modelcluster.egg-info
