@@ -7,7 +7,6 @@ volumes:
 services:
   web:
     container_name: "web"
-    image: &web-image web-image # this image will be reused as `CLI_IMAGE` in subsequent Docker builds
     build:
       context: .
       dockerfile: lagoon/Dockerfile
@@ -15,8 +14,7 @@ services:
       lagoon.type: python
     working_dir: /bakerydemo
     command: >
-      sh -c "sleep 30
-      && python manage.py migrate
+      sh -c "python manage.py migrate
       && python manage.py load_initial_data
       && python manage.py update_index
       && python manage.py runserver 0.0.0.0:8000"
@@ -30,7 +28,6 @@ services:
       PYTHONPATH: "/code/wagtail:/bakerydemo:$PYTHONPATH"
     depends_on:
       - db
-      - frontend
 
   db:
     container_name: "db"
@@ -46,19 +43,3 @@ services:
     restart: "no"
     expose:
       - "5432"
-
-  frontend:
-    container_name: "frontend"
-    labels:
-      lagoon.type: node
-    build:
-      args:
-        WEB_IMAGE: *web-image # Inject the name of the cli image
-      context: .
-      dockerfile: lagoon/Dockerfile.frontend
-    working_dir: /code/wagtail
-    volumes:
-      - wagtail-data:/code/wagtail:delegated,rw
-    command: sh -c "npm run build && npm run start"
-    restart: always
-    tty: true

@@ -1,8 +1,0 @@
-ARG WEB_IMAGE
-FROM ${WEB_IMAGE} as web
-FROM uselagoon/node-18
-LABEL maintainer="hello@wagtail.org"
-
-WORKDIR /code/wagtail
-COPY --from=web /code/wagtail /code/wagtail
-RUN npm --prefix /code/wagtail install --loglevel info

@@ -13,8 +13,8 @@ RUN apk add --no-cache enchant2-dev postgresql-client python3-dev gcc libpq-dev 
 RUN git clone https://github.com/wagtail/bakerydemo.git
 RUN mv ./bakerydemo/requirements/* /code/requirements/
 RUN pip install --upgrade pip 
-RUN pip install -r /code/requirements/production.txt
+RUN pip install --no-cache-dir -r /code/requirements/production.txt
 
 # Copy in requirements.txt and install dependencies.
 COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
