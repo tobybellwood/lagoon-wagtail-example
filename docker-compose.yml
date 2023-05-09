@@ -12,11 +12,10 @@ services:
       dockerfile: lagoon/Dockerfile
     labels:
       lagoon.type: python
-    working_dir: /bakerydemo
+    working_dir: /website
     command: >
       sh -c "python manage.py migrate
-      && python manage.py load_initial_data
-      && python manage.py update_index
+      && python manage.py createsuperuser --no-input
       && python manage.py runserver 0.0.0.0:8000"
     restart: "no"
     volumes:
@@ -24,18 +23,16 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: "postgres://wagtail:changeme@db/wagtail"
-      PYTHONPATH: "/code/wagtail:/bakerydemo:$PYTHONPATH"
+      PYTHONPATH: "/code/wagtail:/website:$PYTHONPATH"
+      DJANGO_SUPERUSER_EMAIL: lagoon@lagoon.com
+      DJANGO_SUPERUSER_PASSWORD: admin
+      DJANGO_SUPERUSER_USERNAME: admin
     depends_on:
-      - db
+      - postgres
 
-  db:
-    container_name: "db"
-    image: postgres:12.3-alpine
-    environment:
-      POSTGRES_USER: wagtail
-      POSTGRES_DB: wagtail
-      POSTGRES_PASSWORD: changeme
+  postgres:
+    container_name: "postgres"
+    image: uselagoon/postgres-15:latest
     labels:
       lagoon.type: postgres
     volumes:
