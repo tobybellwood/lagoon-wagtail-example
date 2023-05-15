@@ -3,12 +3,9 @@ version: '2.3'
 volumes:
   postgres-data:
   wagtail-data:
-  static-assets:
-  nginx-conf:
   
 services:
   web:
-    image: &web-image web-image
     container_name: "web"
     build:
       context: .
@@ -23,7 +20,6 @@ services:
       && uwsgi --http :8000 --module website.wsgi --py-autoreload 1 --logto /tmp/mylog.log"
     volumes:
       - wagtail-data:/code/wagtail:delegated,rw
-      - static-assets:/static
     ports:
       - "8000"
     environment:
@@ -33,25 +29,6 @@ services:
       DJANGO_SUPERUSER_USERNAME: admin
     depends_on:
       - postgres
-    networks:
-      - amazeeio-network
-      - default
-
-  nginx:
-    # image: uselagoon/nginx:latest
-    build:
-      context: .
-      dockerfile: lagoon/nginx.dockerfile
-      args:
-        WEB_IMAGE: *web-image
-    labels:
-      lagoon.type: nginx
-    ports:
-      - "8080"
-    volumes:
-      - static-assets:/static
-    depends_on:
-      - web
     networks:
       - amazeeio-network
       - default
@@ -69,4 +46,4 @@ services:
 
 networks:
   amazeeio-network:
-    # external: true
+    external: true
