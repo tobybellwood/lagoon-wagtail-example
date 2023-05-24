@@ -16,7 +16,6 @@ services:
     command: >
       sh -c "python manage.py migrate
       && python manage.py createsuperuser --no-input
-      && python manage.py collectstatic
       && uwsgi --http :8000 --module website.wsgi --py-autoreload 1 --logto /tmp/mylog.log"
     volumes:
       - wagtail-data:/code/wagtail:delegated,rw
@@ -46,4 +45,4 @@ services:
 
 networks:
   amazeeio-network:
-    external: true
+    # external: true
