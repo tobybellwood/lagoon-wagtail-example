@@ -2,7 +2,6 @@ version: '2.3'
 
 volumes:
   postgres-data:
-  wagtail-data:
   
 services:
   web:
@@ -12,17 +11,10 @@ services:
       dockerfile: lagoon/Dockerfile
     labels:
       lagoon.type: python
-    working_dir: /website
-    command: >
-      sh -c "python manage.py migrate
-      && python manage.py createsuperuser --no-input
-      && uwsgi --http :8000 --module website.wsgi --py-autoreload 1 --logto /tmp/mylog.log"
-    volumes:
-      - wagtail-data:/code/wagtail:delegated,rw
     ports:
       - "8000"
     environment:
-      PYTHONPATH: "/code/wagtail:/website:$PYTHONPATH"
+      PYTHONPATH: "/code/mysite:/mysite:$PYTHONPATH"
       DJANGO_SUPERUSER_EMAIL: lagoon@lagoon.com
       DJANGO_SUPERUSER_PASSWORD: admin
       DJANGO_SUPERUSER_USERNAME: admin
@@ -45,4 +37,4 @@ services:
 
 networks:
   amazeeio-network:
-    # external: true
+    external: true
