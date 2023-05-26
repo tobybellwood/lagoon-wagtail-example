@@ -15,9 +15,6 @@ services:
       - "8000"
     environment:
       PYTHONPATH: "/code/mysite:/mysite:$PYTHONPATH"
-      DJANGO_SUPERUSER_EMAIL: lagoon@lagoon.com
-      DJANGO_SUPERUSER_PASSWORD: admin
-      DJANGO_SUPERUSER_USERNAME: admin
     depends_on:
       - postgres
     networks:
