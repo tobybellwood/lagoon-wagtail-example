@@ -2,6 +2,7 @@ version: '2.3'
 
 volumes:
   postgres-data:
+  wagtail-media:
   
 services:
   web:
@@ -12,12 +13,15 @@ services:
     labels:
       lagoon.type: python
     ports:
-      - "8000"
+      - "8800"
     environment:
       PYTHONPATH: "/code/mysite:/mysite:$PYTHONPATH"
       DJANGO_SUPERUSER_EMAIL: lagoon@lagoon.com
       DJANGO_SUPERUSER_PASSWORD: admin
       DJANGO_SUPERUSER_USERNAME: admin
+    volumes:
+      - ./mysite:/code/mysite:delegated
+      - wagtail-media:/code/mysite/media
     depends_on:
       - postgres
     networks:
