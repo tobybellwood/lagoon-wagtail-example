@@ -1,0 +1,4 @@
+uwsgi
+dj_database_url
+psycopg2
+django-dotenv
