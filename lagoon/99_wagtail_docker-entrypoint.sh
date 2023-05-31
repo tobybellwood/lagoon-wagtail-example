@@ -7,6 +7,4 @@ if [ ! -z $DJANGO_SUPERUSER_USERNAME ] && [ ! -z $DJANGO_SUPERUSER_PASSWORD ] &&
 	/code/mysite/manage.py createsuperuser --no-input
 fi
 
-uwsgi --http :8800 --module mysite.wsgi
-
 exec "$@"

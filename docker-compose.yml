@@ -18,7 +18,7 @@ services:
       PYTHONPATH: "/code/mysite:/mysite:$PYTHONPATH"
     volumes:
       - ./mysite:/code/mysite:delegated
-      - wagtail-media:/code/mysite/media
+#      - wagtail-media:/code/mysite/media # Enable this to store media locally in a volume
     depends_on:
       - postgres
     networks:
