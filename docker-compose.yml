@@ -1,12 +1,21 @@
 version: '2.3'
 
+x-environment:
+  &default-environment
+  # Route that should be used locally, if you are using pygmy, this route *must* end with .docker.amazee.io
+  LAGOON_ROUTE: &default-url http://${COMPOSE_PROJECT_NAME:-lagoon-wagtail-example}.docker.amazee.io
+  DATABASE_URL: postgres://${POSTGRES_USERNAME:-lagoon}:${POSTGRES_PASSWORD:-lagoon}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DATABASE:-lagoon}
+  # Uncomment if you like to have the system behave like in production
+  #LAGOON_ENVIRONMENT_TYPE: production
+  # Uncomment to enable xdebug and then restart via `docker-compose up -d`
+  #XDEBUG_ENABLE: "true"
+
 volumes:
   postgres-data:
   wagtail-media:
 
 services:
-  web:
-    container_name: "web"
+  python:
     build:
       context: .
       dockerfile: lagoon/Dockerfile
@@ -15,6 +24,7 @@ services:
     ports:
       - "8800"
     environment:
+      << : *default-environment
       PYTHONPATH: "/code/mysite:/mysite:$PYTHONPATH"
     volumes:
       - ./mysite:/code/mysite:delegated
@@ -26,7 +36,6 @@ services:
       - default
 
   postgres:
-    container_name: "postgres"
     image: uselagoon/postgres-15:latest
     labels:
       lagoon.type: postgres
