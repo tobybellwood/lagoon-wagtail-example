@@ -3,3 +3,9 @@
 .DS_Store
 __pycache__
 mysite/media
+
+# Created by leia/mocha tests
+node_modules
+test
+package.json
+yarn.lock

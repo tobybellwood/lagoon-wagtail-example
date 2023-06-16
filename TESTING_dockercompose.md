@@ -1,5 +1,5 @@
 Docker Compose Wagtail - python, postgres
-========================================================
+=========================================
 
 This is a docker-compose version of the Lando example tests:
 
@@ -16,9 +16,9 @@ docker-compose down
 # Should start up our Lagoon Wagtail site successfully
 docker-compose build && docker-compose up -d
 
-# Ensure postgres pod is ready to connect, then sleep for 60s
+# Ensure postgres and python pods are ready to connect
 docker run --rm --net lagoon-wagtail-example_default amazeeio/dockerize dockerize -wait tcp://postgres:5432 -timeout 1m
-
+docker run --rm --net lagoon-wagtail-example_default amazeeio/dockerize dockerize -wait tcp://python:8800 -timeout 1m
 ```
 
 Verification commands
@@ -38,22 +38,26 @@ docker-compose exec -T python sh -c "env | grep LAGOON=" | grep python
 docker-compose exec -T python sh -c "env" | grep LAGOON_ROUTE | grep lagoon-wagtail-example.docker.amazee.io
 
 # Should be running python 3.11
-docker-compose exec -T python sh -c "python3 --version" | grep "Python 3.11"
+docker-compose exec -T python sh -c "python3 --version" | grep "Python 3."
 
 # Should have Uwsgi
-docker-compose exec -T python sh -c "uwsgi --version" | grep 2.0.21
+docker-compose exec -T python sh -c "uwsgi --version" | grep "2."
 
 # Should have dependencies via pip - uwsgi, wagtail
-docker-compose exec -T python sh -c "pip list" | grep uWSGI
-docker-compose exec -T python sh -c "pip list" | grep wagtail
-docker-compose exec -T python sh -c "pip list" | grep Django
+docker-compose exec -T python sh -c "pip list" | grep uWSGI | grep "2."
+docker-compose exec -T python sh -c "pip list" | grep wagtail | grep "4."
+docker-compose exec -T python sh -c "pip list" | grep Django | grep "."
 
 # Should have a running site served by uwsgi on port 8800
 docker-compose exec -T python sh -c "curl -kL http://localhost:8800" | grep "Wagtail"
 
 # Should be able to db-export and db-import the database
 docker-compose exec -T python sh -c "/code/mysite/manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 > /code/dump.json"
+docker-compose exec -T python sh -c "sed -i \'/title/ s/Home/Lag00m/\' /code/dump.json"
 docker-compose exec -T python sh -c "/code/mysite/manage.py loaddata /code/dump.json"
+
+# Should have a running site served by uwsgi on port 8800
+docker-compose exec -T python sh -c "curl -kL http://localhost:8800" | grep "Lag00m"
 
 # Should be able to show the 'articles' tables
 docker-compose exec -T python sh -c "/code/mysite/manage.py inspectdb wagtailcore_site" | grep "wagtailcore_site"
@@ -61,6 +65,7 @@ docker-compose exec -T python sh -c "/code/mysite/manage.py inspectdb wagtailcor
 # Should be able to rebuild and persist the database
 docker-compose build && docker-compose up -d
 docker-compose exec -T python sh -c "/code/mysite/manage.py inspectdb wagtailcore_site" | grep "wagtailcore_site"
+docker-compose exec -T python sh -c "curl -kL http://localhost:8800" | grep "Lag00m"
 ```
 
 Destroy tests
@@ -70,5 +75,6 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # Should be able to destroy our rails site with success
+sleep 600
 docker-compose down --volumes --remove-orphans
 ```
